@@ -6,6 +6,7 @@ Este proyecto implementa un sistema de control de lazo abierto para un motor DC 
 
 Antes de clonar este repositorio, asegúrate de tener instalado ROS 2 Humble en Ubuntu 22.04 y las herramientas de micro-ROS:
 
+
 1. **Instalar micro-ROS setup:**
    Sigue las instrucciones del repositorio oficial:
    [micro-ROS Setup](https://github.com/micro-ROS/micro_ros_setup)
@@ -13,6 +14,15 @@ Antes de clonar este repositorio, asegúrate de tener instalado ROS 2 Humble en 
 2. **Librería de Arduino:**
    Descarga e instala en tu Arduino IDE la librería:
    `micro_ros_arduino` (Versión Humble).
+
+### Instalación de dependencias de micro-ROS
+Para que este proyecto funcione, es necesario generar la estructura de carpetas de micro-ROS (incluyendo el paquete `uros`) en tu espacio de trabajo:
+
+```bash
+ros2 run micro_ros_setup create_agent_ws.sh
+ros2 run micro_ros_setup build_agent.sh
+source install/local_setup.bash
+```
 
 ## 🚀 Instalación y Uso
 
