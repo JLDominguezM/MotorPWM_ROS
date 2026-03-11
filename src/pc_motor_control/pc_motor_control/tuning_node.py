@@ -1,3 +1,4 @@
+import os
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32, Int32
@@ -33,6 +34,9 @@ class TuningNode(Node):
         # Experiment 3 parameters (relay auto-tune)
         self.declare_parameter('relay_setpoint', 0.0)        # 0 = auto-detect from step response
         self.declare_parameter('relay_amplitude', 0.5)       # relay output ±d
+
+        # Output
+        self.declare_parameter('output_dir', os.path.expanduser('~'))  # directory to save CSV
 
         self.Ts = self.get_parameter('sample_time').value
         self.ppr = self.get_parameter('encoder_ppr').value
@@ -552,12 +556,13 @@ class TuningNode(Node):
 
     def save_csv(self):
         """Save experiment data to CSV for offline analysis."""
-        filename = f'/home/dominguez/microros_ws/tuning_experiment_{self.experiment}.csv'
+        output_dir = self.get_parameter('output_dir').value
+        filepath = os.path.join(output_dir, f'tuning_experiment_{self.experiment}.csv')
         try:
             data = np.column_stack([self.time_data, self.omega_data, self.cmd_data])
-            np.savetxt(filename, data, delimiter=',',
+            np.savetxt(filepath, data, delimiter=',',
                        header='time,omega,cmd', comments='')
-            self.get_logger().info(f'Data saved to {filename}')
+            self.get_logger().info(f'Data saved to {filepath}')
         except Exception as e:
             self.get_logger().error(f'Failed to save CSV: {e}')
 
