@@ -28,6 +28,8 @@ setup(
             'input_node = pc_motor_control.input_node:main',
             'control_node = pc_motor_control.control_node:main',
             'tuning_node = pc_motor_control.tuning_node:main',
+            'odometry_node = pc_motor_control.odometry_node:main',
+            
         ],
     },
 )
