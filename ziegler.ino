@@ -16,7 +16,7 @@ volatile unsigned long last_isr_time_A = 0;
 volatile unsigned long last_isr_time_B = 0;
 
 unsigned long previousMillis = 0;
-const int dt_ms = 20; // 20ms = 50Hz sample rate for serial plotting
+const int dt_ms = 100; // 20ms = 50Hz sample rate for serial plotting
 
 // Step response variables
 bool stepApplied = false;
@@ -91,8 +91,7 @@ void loop() {
     encoder_count = 0;
     interrupts();
 
-    // RPM formula (using 115 pulses per revolution as provided previously)
-    float currentRPM = (currentPulses * 60.0) / (115.0 * dt);
+    float currentRPM = (currentPulses * 60.0) / (420.0 * dt);
 
     // Print to serial
     Serial.print(currentMillis);

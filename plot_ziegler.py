@@ -6,7 +6,7 @@ from scipy.ndimage import gaussian_filter1d
 # 1. Load your data
 # Make sure the filename matches your text file
 # Assuming your file has a header row like "Time(ms),RPM"
-df = pd.read_csv('data.txt')
+df = pd.read_csv('./experiments/Experiment_1.csv')
 
 # Extract columns
 time_ms = df.iloc[:, 0].values
