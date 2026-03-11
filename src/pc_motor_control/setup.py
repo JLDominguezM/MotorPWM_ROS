@@ -24,7 +24,10 @@ setup(
     },
     entry_points={
         'console_scripts': [
-        'motor_controller = pc_motor_control.motor_controller:main'
+            'motor_controller = pc_motor_control.motor_controller:main',
+            'input_node = pc_motor_control.input_node:main',
+            'control_node = pc_motor_control.control_node:main',
+            'tuning_node = pc_motor_control.tuning_node:main',
         ],
     },
 )
