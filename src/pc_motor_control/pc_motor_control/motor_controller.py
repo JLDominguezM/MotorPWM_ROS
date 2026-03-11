@@ -7,7 +7,9 @@ class MotorController(Node):
     def __init__(self):
         super().__init__('pc_motor_controller')
         
-        self.publisher_ = self.create_publisher(Float32, '/cmd_pwm', 10)
+        # Create separate publishers for the left and right motors
+        self.publisher_left = self.create_publisher(Float32, '/cmd_pwm_left', 10)
+        self.publisher_right = self.create_publisher(Float32, '/cmd_pwm_right', 10)
 
         self.subscription = self.create_subscription(
             Twist,
@@ -26,20 +28,28 @@ class MotorController(Node):
         v = msg.linear.x
         w = msg.angular.z
         
+        # Calculate required speeds for both wheels
         wl = (2.0 * v - w * self.wheel_base) / (2.0 * self.wheel_radius)
+        wr = (2.0 * v + w * self.wheel_base) / (2.0 * self.wheel_radius)
         
-        # 2. Map the calculated rad/s to a PWM duty cycle [-1.0, 1.0]
-        pwm_val = wl / self.max_wheel_rads
+        # Map the calculated rad/s to a PWM duty cycle 
+        pwm_val_l = wl / self.max_wheel_rads
+        pwm_val_r = wr / self.max_wheel_rads
         
-        # 3. Clamp the values to strictly stay within [-1.0, 1.0] to protect the motor driver
-        pwm_val = max(min(pwm_val, 1.0), -1.0)
+        pwm_val_l = max(min(pwm_val_l, 1.0), -1.0)
+        pwm_val_r = max(min(pwm_val_r, 1.0), -1.0)
         
-        # 4. Publish to the physical ESP32/Arduino
-        pwm_msg = Float32()
-        pwm_msg.data = pwm_val
-        self.publisher_.publish(pwm_msg)
+        # publish to the left motor
+        pwm_msg_l = Float32()
+        pwm_msg_l.data = pwm_val_l
+        self.publisher_left.publish(pwm_msg_l)
+
+        # publish to the right motor
+        pwm_msg_r = Float32()
+        pwm_msg_r.data = pwm_val_r
+        self.publisher_right.publish(pwm_msg_r)
         
-        self.get_logger().info(f'Sim (v:{v:.2f}, w:{w:.2f}) -> Motor PWM: {pwm_val:.2f}')
+        self.get_logger().info(f'Sim (v:{v:.2f}, w:{w:.2f}) -> L_PWM: {pwm_val_l:.2f} | R_PWM: {pwm_val_r:.2f}')
 
 def main(args=None):
     rclpy.init(args=args)
@@ -48,10 +58,10 @@ def main(args=None):
     try:
         rclpy.spin(motor_controller)
     except KeyboardInterrupt:
-        # Failsafe: send 0 velocity on exit so the motor stops spinning
         stop_msg = Float32()
         stop_msg.data = 0.0
-        motor_controller.publisher_.publish(stop_msg)
+        motor_controller.publisher_left.publish(stop_msg)
+        motor_controller.publisher_right.publish(stop_msg)
         
     motor_controller.destroy_node()
     rclpy.shutdown()
