@@ -1,5 +1,16 @@
 # Mini Reto 3: Control de Motor DC con ROS 2 y ESP32
 
+## 👥 Team
+
+**Team:** Dream Team  
+
+| Name | Matricula | Github User |
+|------|-----------|-------------|
+| Hector Tovar | A00840308 | @htovarm7 |
+| José Luis Domínguez Morales  | A01285873 | @JLDominguezM |
+| Paola Llamas Hernandez | A01178479 | @PaolaLlh18|
+| Jocelyn Anahi Velarde Barrón | A01285780 | @JocelynVelarde |
+
 Este proyecto implementa un sistema de control de lazo abierto para un motor DC utilizando un **ESP32**, el driver **L298N** y **micro-ROS** sobre ROS 2 Humble.
 
 ## 🛠️ Requisitos Previos
